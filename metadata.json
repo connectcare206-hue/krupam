@@ -1,5 +1,7 @@
 {
   "name": "Connectcare Services",
   "description": "A high-performance recruitment portal for global firms to hire pre-screened talent from India and other regions at 40-70% lower costs, specializing in IT, AI, Pharma, and Accounting.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "microphone"
+  ]
 }

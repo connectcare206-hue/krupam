@@ -32,6 +32,34 @@ export async function getCostComparison(role: string, region: string) {
   }
 }
 
+export async function classifyInquiryIntent(message: string) {
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: `Classify the following recruitment inquiry message into one of three categories: 'Employer', 'Candidate', or 'General'.
+                 Message: "${message}"`,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            intent: { 
+              type: Type.STRING, 
+              enum: ['Employer', 'Candidate', 'General'],
+              description: 'The classified intent of the user.'
+            },
+            confidence: { type: Type.NUMBER }
+          },
+          required: ['intent']
+        }
+      }
+    });
+    return JSON.parse(response.text);
+  } catch (error) {
+    return { intent: 'General' };
+  }
+}
+
 export async function generateJobPitch(role: string, industry: string) {
   try {
     const response = await ai.models.generateContent({

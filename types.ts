@@ -5,6 +5,7 @@ export interface ServiceCard {
   icon: string;
   roles: string[];
   benefits: string;
+  category?: string;
 }
 
 export interface PricingPlan {
@@ -29,8 +30,27 @@ export interface Testimonial {
 }
 
 export enum Industry {
+  CORE_STAFFING = 'Contract Staffing',
   IT_AI = 'IT & AI',
-  DATA_AI = 'AI / ML & Data',
-  PHARMA = 'Pharma & Healthcare',
-  ACCOUNTING = 'Bookkeeping & Accounting'
+  SOLAR_REALESTATE = 'Solar & Real Estate',
+  SUPPORT = 'Customer Support',
+  TRAVEL_OPS = 'Travel & Back-Office',
+  AI_SOLUTIONS = 'AI Voice & Chat',
+  MANPOWER = 'Manpower Services',
+  OVERSEAS = 'Overseas & Expat',
+  RPO = 'RPO Services',
+  CV_SERVICES = 'CV & Resume',
+  EXECUTIVE = 'Executive Search'
+}
+
+export type InquiryType = 'Employer' | 'Candidate' | 'General';
+
+export interface InquiryData {
+  type: InquiryType;
+  name: string;
+  contact: string;
+  details: string;
+  company?: string;
+  skills?: string;
+  experience?: string;
 }

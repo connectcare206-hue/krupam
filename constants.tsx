@@ -1,102 +1,140 @@
-
 import { ServiceCard, PricingPlan, Industry, ProcessStep, Testimonial } from './types';
 
 export const SERVICES: Record<Industry, ServiceCard> = {
+  [Industry.CORE_STAFFING]: {
+    title: 'Global Contract Staffing',
+    category: 'Core',
+    description: 'Scalable offshore workforce solutions. We provide deployment-ready Indian talent for global firms, ensuring 100% compliance and 70% cost reduction.',
+    icon: 'fa-file-contract',
+    roles: ['Contractual Employees', 'Offshore Teams', 'Project Staffing'],
+    benefits: 'Zero hiring liabilities, instant scaling.'
+  },
   [Industry.IT_AI]: {
-    title: 'IT & AI Recruitment',
-    description: 'Strategic contractual hiring for global tech teams. We provide elite developers and AI specialists at 40-70% lower costs than traditional outsourcing firms.',
-    icon: 'fa-code',
-    roles: ['Software Developers (Full Stack)', 'AI/ML Engineers', 'Data Scientists', 'Cloud & DevOps Specialists', 'QA & Automation'],
-    benefits: 'Cut hiring costs by 60%+ while maintaining high code quality.'
+    title: 'IT & AI Talent Solutions',
+    category: 'Technology',
+    description: 'Expert recruitment for high-tech sectors. From Full Stack Devs to AI Engineers, we source elite talent for USA, UK, and AU tech hubs.',
+    icon: 'fa-laptop-code',
+    roles: ['AI/ML Specialists', 'SaaS Developers', 'Cloud Architects', 'DevOps Experts'],
+    benefits: 'Vetted tech talent at $4-8/hour.'
   },
-  [Industry.PHARMA]: {
-    title: 'Pharma & Healthcare',
-    description: 'Specialized staffing for global pharma compliance. We source verified candidates for manufacturing, regulatory affairs, and clinical research.',
-    icon: 'fa-microscope',
-    roles: ['Regulatory Affairs', 'Clinical Research (CRA)', 'QA/QC Managers', 'Manufacturing Support', 'Pharmacovigilance'],
-    benefits: 'Verified, compliant talent for accelerated global market entry.'
+  [Industry.SOLAR_REALESTATE]: {
+    title: 'Renewable & Real Estate Hiring',
+    category: 'Industry Specific',
+    description: 'Targeted staffing for the Solar and Real Estate industries. We source sales powerhouses and project managers who understand high-growth infrastructure.',
+    icon: 'fa-solar-panel',
+    roles: ['Channel Sales Partners', 'Site Engineers', 'Project Coordinators'],
+    benefits: 'Specialized niche industry expertise.'
   },
-  [Industry.ACCOUNTING]: {
-    title: 'Bookkeeping & Accounting',
-    description: 'Finance back-office support tailored for USA, UK, CA, and AU standards. Ensure 100% accuracy and compliance with global financial regulations.',
-    icon: 'fa-file-invoice-dollar',
-    roles: ['CPA Support Staff', 'Senior Bookkeepers', 'AP/AR Specialists', 'Payroll Management', 'Tax Support Analysts'],
-    benefits: 'Reduce operational overhead while maintaining CPA-level accuracy.'
+  [Industry.SUPPORT]: {
+    title: 'Global Customer Support BPO',
+    category: 'Operations',
+    description: '24/7 Voice and Non-Voice support teams. High-quality English proficiency for North American and European customer service standards.',
+    icon: 'fa-headset',
+    roles: ['International Support Agents', 'Technical Helpdesk', 'CX Specialists'],
+    benefits: 'Round-the-clock global service coverage.'
   },
-  [Industry.DATA_AI]: {
-    title: 'Contractual Staffing',
-    description: 'A flexible recruitment model where you maintain 100% control. We handle the heavy lifting of sourcing and screening; you finalize the hire.',
-    icon: 'fa-user-tie',
-    roles: ['Project-Based Experts', 'Remote Support Teams', 'Specialized Contractors'],
-    benefits: 'No vendor lock-ins. You hire. We deliver the talent.'
+  [Industry.TRAVEL_OPS]: {
+    title: 'Travel & Back-Office RPO',
+    category: 'Operations',
+    description: 'Back-office process support for travel and logistics agencies. Handle documentation, CRM management, and operations at scale.',
+    icon: 'fa-plane-departure',
+    roles: ['Logistics Ops Executives', 'CRM Managers', 'Documentation Staff'],
+    benefits: 'Operational efficiency at offshore costs.'
+  },
+  [Industry.AI_SOLUTIONS]: {
+    title: 'AI Voice & Chat Automation',
+    category: 'Innovation',
+    description: 'The future of staffing. Deploy AI-driven voice agents for lead handling and appointment scheduling to supplement your human workforce.',
+    icon: 'fa-robot',
+    roles: ['AI Lead Handlers', 'Automated Scheduling', 'Chatbot Management'],
+    benefits: '90% reduction in simple inquiry costs.'
+  },
+  [Industry.MANPOWER]: {
+    title: 'Bulk Manpower Sourcing',
+    category: 'Core',
+    description: 'Volume hiring solutions for large enterprises. Rapid sourcing and screening of 100+ candidates for major project launches.',
+    icon: 'fa-users-gear',
+    roles: ['Mass Hiring Projects', 'General Staffing', 'Entry-level Batches'],
+    benefits: 'Speed-to-hire for volume requirements.'
+  },
+  [Industry.OVERSEAS]: {
+    title: 'Overseas & Expat Recruitment',
+    category: 'Global',
+    description: 'Navigating international hiring complexities. We assist in cross-border talent placement and expat compliance for global projects.',
+    icon: 'fa-earth-americas',
+    roles: ['International Headhunting', 'Expat Vetting', 'Visa Compliance Support'],
+    benefits: 'Elite global talent search capability.'
+  },
+  [Industry.RPO]: {
+    title: 'Recruitment Process Outsourcing',
+    category: 'Managed Services',
+    description: 'We act as your internal HR team. Dedicated recruiters who manage the end-to-end cycle from sourcing to final onboarding.',
+    icon: 'fa-building-circle-check',
+    roles: ['Dedicated Hiring Managers', 'ATS Management', 'Onboarding Support'],
+    benefits: 'No internal HR overheads.'
+  },
+  [Industry.CV_SERVICES]: {
+    title: 'Candidate Profile Optimization',
+    category: 'Specialized',
+    description: 'Professional CV formatting and profile creation. Ensuring candidates meet the presentation standards of top-tier global firms.',
+    icon: 'fa-id-card',
+    roles: ['Resume Redesign', 'LinkedIn Optimization', 'Profile Verification'],
+    benefits: 'Standardized high-quality talent presentation.'
+  },
+  [Industry.EXECUTIVE]: {
+    title: 'C-Suite Executive Search',
+    category: 'Elite',
+    description: 'Confidential headhunting for leadership roles. Finding the directors and VPs who will steer your company to the next level.',
+    icon: 'fa-crown',
+    roles: ['VPs & Directors', 'Strategic Leads', 'Technical Founders'],
+    benefits: 'Niche, discreet leadership sourcing.'
   }
 };
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
-    experience: 'Junior (1–3 Years)',
+    experience: 'Junior Talent (1–3 Years)',
     cost: 'USD 500 – 690',
     hourlyRate: '$4 - $5',
-    features: ['Technical Vetting Included', 'Identity Verification', 'Direct Communication', 'Replacement Guarantee']
+    features: ['Fully Screened', 'English Proficient', 'Immediate Availability', 'Replacement Guarantee']
   },
   {
-    experience: 'Senior (3–7 Years)',
+    experience: 'Expert Talent (3–7+ Years)',
     cost: 'USD 700 – 950',
     hourlyRate: '$6 - $8',
-    features: ['Lead-Level Expertise', 'Complex Project Management', 'Niche Tech Specialization', 'Priority Support']
+    features: ['Lead Experience', 'Advanced Certifications', 'Niche Technical Skills', 'Direct Manager Reporting']
   }
 ];
 
 export const PROCESS_STEPS: ProcessStep[] = [
   {
     number: '01',
-    title: 'Requirement Discovery',
-    description: 'We align on your specific tech stack, role requirements, and project timeline.',
+    title: 'Role Specification',
+    description: 'We define the technical and cultural requirements for your ideal candidate.',
     icon: 'fa-comments'
   },
   {
     number: '02',
-    title: 'Sourcing & Screening',
-    description: 'Our team rigorously vets candidates through technical assessments and cultural checks.',
+    title: 'Talent Sourcing',
+    description: 'Our recruiters scour our database of 500k+ Indian professionals.',
     icon: 'fa-magnifying-glass'
   },
   {
     number: '03',
-    title: 'Profile Shortlist',
-    description: 'You receive a curated list of pre-screened profiles ready for evaluation.',
+    title: 'Rigorous Vetting',
+    description: 'Candidates undergo technical tests and behavioral interviews.',
     icon: 'fa-user-check'
   },
   {
     number: '04',
-    title: 'Direct Interviews',
-    description: 'You interview candidates directly to ensure they fit your specific team needs.',
+    title: 'Client Finalization',
+    description: 'You interview the top 3-5 candidates and make the final hire.',
     icon: 'fa-calendar-days'
   },
   {
     number: '05',
-    title: 'Final Selection',
-    description: 'The hiring decision is yours. We handle the onboarding and logistics.',
+    title: 'Seamless Onboarding',
+    description: 'We handle the contracts and logistics. Your new hire starts immediately.',
     icon: 'fa-handshake'
-  }
-];
-
-export const TESTIMONIALS: Testimonial[] = [
-  {
-    quote: "Connectcare helped us build a 5-person dev team in weeks for the cost of one local senior hire. Incredible ROI.",
-    author: "Mark S.",
-    role: "CTO",
-    location: "USA"
-  },
-  {
-    quote: "Professional, fast, and compliant. The quality of Pharma regulatory candidates exceeded our expectations.",
-    author: "Elena R.",
-    role: "Operations Director",
-    location: "UK"
-  },
-  {
-    quote: "Remarkable accuracy in accounting support. They truly understand Australian standards.",
-    author: "Sanjay G.",
-    role: "Founder, CPA Firm",
-    location: "Australia"
   }
 ];
