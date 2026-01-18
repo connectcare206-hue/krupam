@@ -35,7 +35,7 @@ export const VoiceAgent: React.FC = () => {
 
   const stopSession = () => {
     if (sessionRef.current) {
-      sessionRef.current.close();
+      try { sessionRef.current.close(); } catch(e) {}
       sessionRef.current = null;
     }
     if (scriptProcessorRef.current) {
@@ -47,8 +47,14 @@ export const VoiceAgent: React.FC = () => {
     });
     sourcesRef.current.clear();
     
-    if (audioContextInRef.current) audioContextInRef.current.close().catch(() => {});
-    if (audioContextOutRef.current) audioContextOutRef.current.close().catch(() => {});
+    if (audioContextInRef.current) {
+      audioContextInRef.current.close().catch(() => {});
+      audioContextInRef.current = null;
+    }
+    if (audioContextOutRef.current) {
+      audioContextOutRef.current.close().catch(() => {});
+      audioContextOutRef.current = null;
+    }
     
     setIsActive(false);
     setIsConnecting(false);
@@ -56,22 +62,27 @@ export const VoiceAgent: React.FC = () => {
   };
 
   const startSession = async () => {
-    if (isConnecting) return;
+    if (isConnecting || isActive) return;
     setIsConnecting(true);
     
     try {
+      // 1. Check for API key early
+      if (!process.env.API_KEY) {
+        throw new Error("API Key is missing. Please set it in Netlify/Environment variables.");
+      }
+
+      // 2. ONLY NOW request microphone - this ensures the browser prompt only appears on click
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
       // Initialize Contexts
       audioContextInRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
       audioContextOutRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
       
-      // IMPORTANT: Resume contexts on user interaction
       await audioContextInRef.current.resume();
       await audioContextOutRef.current.resume();
 
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
       const sessionPromise = ai.live.connect({
         model: 'gemini-2.5-flash-native-audio-preview-12-2025',
         callbacks: {
@@ -95,7 +106,7 @@ export const VoiceAgent: React.FC = () => {
               };
               
               sessionPromise.then(session => {
-                if (session && session.sendRealtimeInput) {
+                if (session && typeof session.sendRealtimeInput === 'function') {
                   session.sendRealtimeInput({ media: pcmBlob });
                 }
               });
@@ -152,8 +163,9 @@ export const VoiceAgent: React.FC = () => {
       });
 
       sessionRef.current = await sessionPromise;
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to start session:', err);
+      alert(err.message || "Could not start voice agent. Please ensure microphone access is allowed.");
       setIsConnecting(false);
     }
   };
@@ -161,8 +173,8 @@ export const VoiceAgent: React.FC = () => {
   return (
     <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end gap-4">
       {isActive && (
-        <div className="bg-slate-900 border border-white/10 p-6 rounded-3xl shadow-2xl w-80 mb-2 animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-blue-600 to-cyan-400"></div>
+        <div className="bg-slate-900 border border-white/10 p-6 rounded-[2.5rem] shadow-2xl w-80 mb-2 animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-hidden relative">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-cyan-400"></div>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -189,10 +201,10 @@ export const VoiceAgent: React.FC = () => {
             </div>
             <div>
               <p className="text-sm font-extrabold text-white mb-2">
-                {isSpeaking ? 'G\'day! I\'m speaking...' : 'I\'m listening, mate...'}
+                {isSpeaking ? "G'day! I'm speaking..." : "I'm listening, mate..."}
               </p>
               <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-relaxed">
-                Ask about pricing, industries, <br />or client control processes.
+                Ask about pricing, industries, <br />or hiring processes.
               </p>
             </div>
           </div>

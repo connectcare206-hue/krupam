@@ -1,13 +1,14 @@
-
 import React, { useState } from 'react';
 import { Layout } from './components/Layout';
 import { AICostCalculator } from './components/AICostCalculator';
 import { VoiceAgent } from './components/VoiceAgent';
 import { InquiryAssistant } from './components/InquiryAssistant';
-import { SERVICES, PRICING_PLANS, PROCESS_STEPS } from './constants';
+import { SERVICES, PROCESS_STEPS } from './constants';
 import { InquiryType } from './types';
+import { ServicesPage } from './ServicesPage';
 
 const App: React.FC = () => {
+  const [view, setView] = useState<'home' | 'services'>('home');
   const [activeInquiryTrigger, setActiveInquiryTrigger] = useState<{ type: InquiryType, key: number } | null>(null);
 
   const handleHeroAction = (type: InquiryType) => {
@@ -18,196 +19,176 @@ const App: React.FC = () => {
     }
   };
 
+  const handleNavigate = (target: 'home' | 'services') => {
+    setView(target);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <Layout onActionTrigger={handleHeroAction}>
-      {/* Hero Section */}
-      <section className="relative pt-40 pb-20 md:pt-56 md:pb-32 overflow-hidden bg-mesh">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            <div className="lg:w-3/5 text-center lg:text-left">
-              <div className="inline-flex items-center gap-3 px-4 py-2 bg-blue-600/10 border border-blue-600/20 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-10">
-                <span className="flex h-2 w-2 rounded-full bg-blue-600 animate-pulse"></span>
-                Global Recruitment Partner & Offshore Hub
+    <Layout 
+      onActionTrigger={handleHeroAction} 
+      onNavigate={handleNavigate}
+      currentView={view}
+    >
+      {view === 'home' ? (
+        <>
+          {/* Redesigned Bold Hero Section */}
+          <section className="relative min-h-screen pt-40 pb-20 flex items-center overflow-visible">
+            <div className="container mx-auto px-6 relative z-10">
+              <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-32">
+                <div className="lg:w-3/5 text-center lg:text-left">
+                  <div className="inline-flex items-center gap-4 px-6 py-3 bg-[#64FFDA]/5 border border-[#64FFDA]/10 text-[#64FFDA] rounded-full text-[11px] font-black uppercase tracking-[0.2em] mb-12 animate-in slide-in-from-top-4 duration-700">
+                    <span className="flex h-2.5 w-2.5 rounded-full bg-[#64FFDA] animate-pulse"></span>
+                    Elite Global Recruitment & Contractual Staffing
+                  </div>
+                  
+                  <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-black text-white mb-10 leading-[0.9] tracking-tighter animate-in slide-in-from-left-10 duration-1000">
+                    Sourcing <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#64FFDA] via-cyan-400 to-blue-500">Global Elite.</span>
+                  </h1>
+                  
+                  <p className="text-xl md:text-2xl text-slate-300 mb-14 max-w-2xl leading-relaxed font-medium opacity-95 animate-in fade-in duration-1000 delay-300">
+                    Optimizing the enterprise workforce with pre-screened talent from India. Dedicated <span className="text-white font-bold border-b-2 border-[#64FFDA]/30 pb-1">Domestic & International</span> staffing for high-growth sectors across USA, UK, Canada & AU.
+                  </p>
+
+                  {/* Trust Bar with Flags */}
+                  <div className="flex flex-wrap items-center gap-10 mb-20 justify-center lg:justify-start">
+                    <div className="flex items-center gap-6 bg-white/5 border border-white/10 px-10 py-5 rounded-[2rem] backdrop-blur-xl">
+                       <span className="text-[11px] font-black uppercase tracking-widest text-slate-500">Markets:</span>
+                       <div className="flex gap-4 text-3xl filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] hover:scale-110 transition-transform cursor-default">🇺🇸 🇬🇧 🇨🇦 🇦🇺</div>
+                    </div>
+                    <div className="flex items-center gap-3 px-10 py-5 bg-[#64FFDA]/5 border border-[#64FFDA]/20 rounded-[2rem] backdrop-blur-xl group hover:border-[#64FFDA] transition-all">
+                       <i className="fas fa-certificate text-[#64FFDA] text-xl group-hover:rotate-12 transition-transform"></i>
+                       <span className="text-[11px] font-black uppercase tracking-widest text-[#64FFDA]">ISO 9001:2015 HUB</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row gap-8 justify-center lg:justify-start">
+                    <button 
+                      onClick={() => handleHeroAction('Employer')}
+                      className="bg-[#64FFDA] text-[#020617] px-16 py-7 rounded-3xl font-black text-[13px] uppercase tracking-[0.2em] hover:shadow-[0_0_50px_rgba(100,255,218,0.5)] transition-all hover:-translate-y-1.5 active:scale-95 shadow-2xl"
+                    >
+                      Hire Talent Now
+                    </button>
+                    <button 
+                      onClick={() => handleNavigate('services')}
+                      className="border border-white/20 text-white px-16 py-7 rounded-3xl font-black text-[13px] uppercase tracking-[0.2em] hover:border-[#64FFDA] hover:text-[#64FFDA] transition-all hover:-translate-y-1.5 active:scale-95 bg-white/5 backdrop-blur-md"
+                    >
+                      Talk to Our Team
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="lg:w-2/5 flex justify-center perspective-1000 animate-in fade-in zoom-in duration-1000 delay-500">
+                  <div className="globe-container">
+                     <div className="globe"></div>
+                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="w-[110%] h-[110%] border border-[#64FFDA]/5 rounded-full animate-ping opacity-10"></div>
+                        <div className="w-[140%] h-[140%] border border-[#64FFDA]/5 rounded-full animate-pulse opacity-5"></div>
+                     </div>
+                  </div>
+                </div>
               </div>
-              
-              <h1 className="text-5xl md:text-8xl font-black text-slate-900 leading-[1] tracking-tight mb-8">
-                Global Talent.<br />
-                <span className="text-blue-600">Local Costs.</span>
-              </h1>
-              
-              <p className="text-xl md:text-2xl text-slate-600 mb-12 max-w-2xl leading-relaxed font-medium">
-                Helping companies in <strong className="text-slate-900">USA, UK, Canada & AU</strong> hire pre-screened professionals at 70% lower costs. You interview, you select, we deliver.
-              </p>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto lg:mx-0">
-                <div className="p-8 bg-slate-900 text-white rounded-[2.5rem] shadow-2xl group text-left border border-white/5 flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-black text-xl mb-2 uppercase tracking-tight">For Employers</h3>
-                    <p className="text-xs text-slate-400 mb-8 leading-relaxed">Scale your IT, AI, or Sales teams in 48 hours with pre-screened talent.</p>
-                  </div>
-                  <button 
-                    onClick={() => handleHeroAction('Employer')}
-                    className="w-full bg-blue-600 text-white py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-blue-500 transition-all active:scale-95 shadow-lg shadow-blue-600/20"
-                  >
-                    Hire Elite Talent
-                  </button>
-                </div>
-                <div className="p-8 bg-white border border-slate-200 rounded-[2.5rem] shadow-xl group text-left flex flex-col justify-between">
-                  <div>
-                    <h3 className="font-black text-xl mb-2 text-slate-900 uppercase tracking-tight">For Candidates</h3>
-                    <p className="text-xs text-slate-500 mb-8 leading-relaxed">Join top-tier firms in USA, UK, and Australia. Global career starts here.</p>
-                  </div>
-                  <button 
-                    onClick={() => handleHeroAction('Candidate')}
-                    className="w-full bg-slate-100 text-slate-900 py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-slate-200 transition-all active:scale-95"
-                  >
-                    Submit Resume
-                  </button>
-                </div>
+            </div>
+          </section>
+
+          {/* Quick Preview Section */}
+          <section id="services-preview" className="py-32 relative">
+            <div className="container mx-auto px-6 relative z-10">
+              <div className="text-center mb-32">
+                <h2 className="text-[#64FFDA] text-[11px] font-black uppercase tracking-[0.7em] mb-8">Expertise Verticals</h2>
+                <h3 className="text-6xl md:text-8xl font-black text-white tracking-tighter">Enterprise Power.</h3>
               </div>
 
-              <div className="mt-16 flex items-center justify-center lg:justify-start gap-8 opacity-60 grayscale hover:grayscale-0 transition-all">
-                <div className="flex items-center gap-2"><i className="fas fa-certificate text-blue-600"></i> <span className="text-[10px] font-bold uppercase tracking-widest">ISO 9001 Certified</span></div>
-                <div className="flex items-center gap-2"><i className="fas fa-shield-halved text-blue-600"></i> <span className="text-[10px] font-bold uppercase tracking-widest">GDPR Compliant</span></div>
-                <div className="flex items-center gap-2"><i className="fas fa-check-double text-blue-600"></i> <span className="text-[10px] font-bold uppercase tracking-widest">Vetted 500k+ Database</span></div>
-              </div>
-            </div>
-            
-            <div className="lg:w-2/5 hidden lg:block">
-              <div className="relative">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" alt="Recruitment Consultant" className="rounded-[4rem] shadow-3xl grayscale-[20%] hover:grayscale-0 transition-all duration-700" />
-                <div className="absolute -bottom-10 -left-10 bg-white p-8 rounded-[3rem] shadow-3xl border border-slate-100 animate-bounce-slow">
-                  <p className="text-5xl font-black text-blue-600 mb-1">48h</p>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Average Sourcing Time</p>
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-10 auto-rows-[320px]">
+                <div className="md:col-span-8 glass-card rounded-[4.5rem] p-16 flex flex-col justify-end group overflow-hidden relative border border-white/10">
+                   <div className="absolute top-12 right-12 text-9xl text-white/5 group-hover:text-[#64FFDA]/10 transition-all duration-700">
+                      <i className="fas fa-microchip"></i>
+                   </div>
+                   <h4 className="text-5xl font-black text-white mb-8 tracking-tighter leading-none">IT & AI <br />Staffing Hub.</h4>
+                   <p className="text-slate-400 text-lg max-w-xl mb-12 leading-relaxed font-medium">Sourcing elite Indian full-stack, AI/ML, and DevOps talent for western engineering hubs.</p>
+                   <button onClick={() => handleNavigate('services')} className="w-fit text-[12px] font-black uppercase tracking-[0.3em] text-[#64FFDA] border-b-2 border-[#64FFDA]/20 pb-3 hover:border-[#64FFDA] transition-all flex items-center gap-4">
+                     View All Vertical Services <i className="fas fa-arrow-right text-[12px] group-hover:translate-x-2 transition-transform"></i>
+                   </button>
+                </div>
+
+                <div className="md:col-span-4 glass-card rounded-[4.5rem] p-12 flex flex-col justify-center text-center group border border-white/10">
+                   <div className="w-24 h-24 bg-[#64FFDA]/5 border border-[#64FFDA]/10 rounded-[2.5rem] flex items-center justify-center text-[#64FFDA] text-5xl mx-auto mb-10 group-hover:scale-110 transition-transform shadow-[0_0_40px_rgba(100,255,218,0.15)]">
+                      <i className="fas fa-solar-panel"></i>
+                   </div>
+                   <h4 className="text-3xl font-black text-white mb-6 uppercase tracking-tight">Solar Edge.</h4>
+                   <p className="text-slate-500 text-base leading-relaxed font-bold">Niche staffing for the renewable energy revolution.</p>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      <section id="about" className="py-32 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col lg:flex-row gap-20 items-center">
-            <div className="lg:w-1/2">
-              <h2 className="text-[10px] font-black text-blue-600 uppercase tracking-[0.4em] mb-6">Expert Recruitment Partner</h2>
-              <h3 className="text-5xl font-black text-slate-900 mb-8 leading-tight">Scale Without the Margins.</h3>
-              <p className="text-lg text-slate-500 leading-relaxed mb-10">
-                Connectcare Services is not an outsourcing firm. We are your **Offshore Recruitment Hub**. 
-                You get full control over candidates, while we handle the sourcing, screening, and logistics in India. 
-                Perfect for firms in the **USA, UK, Canada, and Australia** looking to optimize for profit.
-              </p>
-              <div className="flex gap-12">
-                 <div>
-                    <p className="text-4xl font-black text-slate-900 mb-2">500k+</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Talent Database</p>
-                 </div>
-                 <div>
-                    <p className="text-4xl font-black text-slate-900 mb-2">40%+</p>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Avg. Client Growth</p>
-                 </div>
-              </div>
-              <button 
-                onClick={() => handleHeroAction('Employer')}
-                className="mt-12 bg-slate-900 text-white px-10 py-5 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-blue-600 transition-all active:scale-95 shadow-2xl flex items-center gap-3"
-              >
-                Learn About Our Model <i className="fas fa-arrow-right"></i>
-              </button>
-            </div>
-            <div className="lg:w-1/2 grid grid-cols-2 gap-6">
-               <div className="p-8 bg-slate-50 rounded-[3rem] text-center border border-slate-100 hover:shadow-xl transition-shadow cursor-default group">
-                  <i className="fas fa-users-viewfinder text-3xl text-blue-600 mb-4 group-hover:scale-110 transition-transform"></i>
-                  <h4 className="font-black uppercase text-xs tracking-widest text-slate-900">Pre-Screened</h4>
-               </div>
-               <div className="p-8 bg-slate-50 rounded-[3rem] text-center border border-slate-100 mt-12 hover:shadow-xl transition-shadow cursor-default group">
-                  <i className="fas fa-dollar-sign text-3xl text-blue-600 mb-4 group-hover:scale-110 transition-transform"></i>
-                  <h4 className="font-black uppercase text-xs tracking-widest text-slate-900">Cost Effective</h4>
-               </div>
-               <div className="p-8 bg-slate-50 rounded-[3rem] text-center border border-slate-100 -mt-12 hover:shadow-xl transition-shadow cursor-default group">
-                  <i className="fas fa-hand-holding-heart text-3xl text-blue-600 mb-4 group-hover:scale-110 transition-transform"></i>
-                  <h4 className="font-black uppercase text-xs tracking-widest text-slate-900">High Retention</h4>
-               </div>
-               <div className="p-8 bg-slate-50 rounded-[3rem] text-center border border-slate-100 hover:shadow-xl transition-shadow cursor-default group">
-                  <i className="fas fa-microchip text-3xl text-blue-600 mb-4 group-hover:scale-110 transition-transform"></i>
-                  <h4 className="font-black uppercase text-xs tracking-widest text-slate-900">AI Enabled</h4>
-               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="services" className="py-32 bg-slate-900 text-white">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-24">
-            <h2 className="text-[10px] font-black text-blue-400 uppercase tracking-[0.5em] mb-6">Our Solutions</h2>
-            <h3 className="text-5xl font-black mb-8">Specialized Hiring Channels.</h3>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {Object.entries(SERVICES).map(([key, service], idx) => (
-              <article key={idx} className="bg-slate-800/50 border border-white/5 p-12 rounded-[3.5rem] hover:border-blue-600 transition-all duration-500 group flex flex-col justify-between h-full">
-                <div>
-                  <div className="w-16 h-16 bg-blue-600/10 text-blue-500 rounded-3xl flex items-center justify-center mb-10 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                    <i className={`fas ${service.icon} text-2xl`}></i>
+          {/* Model Section */}
+          <section id="process" className="py-40 relative">
+            <div className="container mx-auto px-6 relative z-10">
+              <div className="flex flex-col lg:flex-row gap-40 items-start">
+                <div className="lg:w-1/3 lg:sticky lg:top-48">
+                  <h2 className="text-[#64FFDA] text-[11px] font-black uppercase tracking-[0.7em] mb-10">Operational Model</h2>
+                  <h3 className="text-6xl md:text-7xl font-black text-white leading-[1] mb-12 tracking-tighter">Velocity <br />Hiring.</h3>
+                  <p className="text-xl text-slate-400 font-medium mb-16 leading-relaxed">We optimize the sourcing friction, delivering deployment-ready talent in under 48 hours.</p>
+                  
+                  <div className="p-12 border border-white/5 rounded-[4rem] bg-white/5 backdrop-blur-2xl relative overflow-hidden group hover:border-[#64FFDA]/30 transition-all">
+                     <div className="text-6xl font-black text-[#64FFDA] mb-3 tracking-tighter">70% ROI</div>
+                     <p className="text-[11px] font-black uppercase tracking-widest text-slate-500">Annual Margin Retention Advantage</p>
                   </div>
-                  <h4 className="text-2xl font-black mb-4 group-hover:text-blue-400 transition-colors">{service.title}</h4>
-                  <p className="text-slate-400 text-sm leading-relaxed mb-8">{service.description}</p>
-                  <div className="space-y-3 mb-10">
-                    {service.roles.slice(0, 3).map((role, rIdx) => (
-                      <div key={rIdx} className="flex items-center gap-3 text-[10px] font-black text-slate-500 uppercase tracking-widest">
-                        <div className="w-1.5 h-1.5 rounded-full bg-blue-600"></div>
-                        {role}
+                </div>
+
+                <div className="lg:w-2/3 relative">
+                  <div className="absolute left-[31px] top-10 bottom-10 w-px bg-gradient-to-b from-[#64FFDA]/40 via-white/5 to-transparent hidden sm:block"></div>
+                  <div className="space-y-24">
+                    {PROCESS_STEPS.map((step, idx) => (
+                      <div key={idx} className="relative pl-0 sm:pl-32 group">
+                        <div className="absolute left-0 top-0 w-20 h-20 rounded-[1.5rem] bg-[#0A192F] border border-[#64FFDA]/20 flex items-center justify-center text-[#64FFDA] text-3xl z-10 hidden sm:flex transition-all group-hover:border-[#64FFDA] group-hover:shadow-[0_0_40px_rgba(100,255,218,0.3)]">
+                          <i className={`fas ${step.icon}`}></i>
+                        </div>
+                        <div className="glass-card p-14 rounded-[4rem] group-hover:translate-x-6 transition-transform">
+                           <span className="text-[11px] font-black text-[#64FFDA] uppercase tracking-[0.5em] mb-6 block opacity-80">PHASE {step.number}</span>
+                           <h4 className="text-4xl font-black text-white mb-8 tracking-tight leading-none">{step.title}</h4>
+                           <p className="text-slate-400 text-lg leading-relaxed">{step.description}</p>
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
-                <button 
-                  onClick={() => handleHeroAction('Employer')}
-                  className="w-full bg-white/5 hover:bg-blue-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 border border-white/10 hover:border-blue-600"
-                >
-                  Hire This Talent
-                </button>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <AICostCalculator onSavingsClaimed={() => handleHeroAction('Employer')} />
-      <VoiceAgent />
-      
-      <section id="contact" className="py-32 bg-slate-50">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col lg:flex-row gap-20">
-            <div className="lg:w-1/2 flex flex-col justify-center">
-              <h3 className="text-5xl font-black text-slate-900 mb-8 leading-none">Ready to hire? <br />Or ready to be hired?</h3>
-              <p className="text-xl text-slate-500 mb-12 font-medium">Use our Intelligent Inquiry Assistant to get started. Our AI will analyze your requirement and route you to the right department instantly.</p>
-              <div className="space-y-6">
-                 <div className="flex items-center gap-4 text-slate-900 font-bold group">
-                    <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                      <i className="fas fa-check"></i>
-                    </div>
-                    No Upfront Sourcing Fees
-                 </div>
-                 <div className="flex items-center gap-4 text-slate-900 font-bold group">
-                    <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                      <i className="fas fa-shield-check"></i>
-                    </div>
-                    Global Compliance Management
-                 </div>
-                 <div className="flex items-center gap-4 text-slate-900 font-bold group">
-                    <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                      <i className="fas fa-user-tie"></i>
-                    </div>
-                    Dedicated Client Manager
-                 </div>
-              </div>
-              <div className="mt-12 p-8 bg-blue-600 rounded-[2.5rem] text-white shadow-2xl">
-                 <p className="text-sm font-black uppercase tracking-widest mb-4 opacity-80">Direct Support</p>
-                 <a href="tel:+918460335032" className="text-3xl font-black hover:text-blue-100 transition-colors block mb-2">+91 8460335032</a>
-                 <a href="mailto:connectcare206@gmail.com" className="text-lg font-bold opacity-90 hover:opacity-100 underline decoration-blue-300">connectcare206@gmail.com</a>
               </div>
             </div>
-            
+          </section>
+
+          <AICostCalculator onSavingsClaimed={() => handleHeroAction('Employer')} />
+        </>
+      ) : (
+        <ServicesPage onAction={handleHeroAction} />
+      )}
+
+      <VoiceAgent />
+      
+      {/* Contact Hub Section */}
+      <section id="contact" className="py-40 relative">
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-40">
+            <div className="lg:w-1/2">
+               <h3 className="text-6xl md:text-8xl font-black text-white mb-12 leading-[0.9] tracking-tighter">Scale Your <br /><span className="text-[#64FFDA]">Nexus Team.</span></h3>
+               <p className="text-2xl text-slate-400 mb-20 leading-relaxed max-w-xl">Our AI intake engine is ready to classify your enterprise requirements. Connect directly with specialized talent hubs for immediate deployment.</p>
+               <div className="space-y-12">
+                  {[
+                    {icon: 'fa-microchip', text: 'HQ in India Tech Hubs, Global Distribution'},
+                    {icon: 'fa-shield-check', text: '100% Contractual & Legal Compliance Standard'},
+                    {icon: 'fa-user-check', text: '48hr Sourcing-to-Interview Nexus Pipeline'}
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-10 group">
+                       <div className="w-20 h-20 rounded-[2rem] bg-white/5 border border-white/10 flex items-center justify-center text-[#64FFDA] group-hover:bg-[#64FFDA] group-hover:text-[#020617] transition-all duration-700 shadow-2xl">
+                          <i className={`fas ${item.icon} text-2xl`}></i>
+                       </div>
+                       <span className="text-lg font-bold text-slate-300 group-hover:text-white transition-colors">{item.text}</span>
+                    </div>
+                  ))}
+               </div>
+            </div>
             <div className="lg:w-1/2">
               <InquiryAssistant externalTypeTrigger={activeInquiryTrigger?.type} />
             </div>

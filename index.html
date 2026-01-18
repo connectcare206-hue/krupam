@@ -1,124 +1,231 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connectcare Services | Global Recruitment Agency & Offshore Staffing</title>
-    <meta name="description" content="Connectcare Services: The premier recruitment agency for offshore contractual staffing. Hire elite IT, AI, Pharma, and Solar talent from India at 70% lower costs. Trusted by USA, UK, Canada & AU firms.">
-    <meta name="keywords" content="Recruitment Agency India, Offshore Staffing, Hire Remote Developers, IT Recruitment USA, Contractual Hiring UK, RPO Services Australia, Solar Staffing, Pharma Recruitment">
-    
-    <!-- Open Graph / Social -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://connectcareservices.com/">
-    <meta property="og:title" content="Connectcare Services | Scale Your Global Workforce">
-    <meta property="og:description" content="Hire pre-screened talent at $4-5/hr. 100% Client control. Direct finalization. No outsourcing margins.">
+    <title>Connectcare Services | Quantum Recruitment & Global Staffing</title>
+    <meta name="description" content="Premium offshore recruitment and contract staffing hub for USA, UK, Canada & AU firms. Hire elite talent at 70% lower costs.">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- JSON-LD Recruitment Agency Schema -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "RecruitmentAgency",
-      "name": "Connectcare Services",
-      "alternateName": "Connectcare Global Staffing",
-      "url": "https://connectcareservices.com/",
-      "logo": "https://connectcareservices.com/logo.png",
-      "description": "Global recruitment company specializing in contractual staffing for IT, AI, Pharma, and Solar sectors.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "India"
-      },
-      "areaServed": ["USA", "UK", "Canada", "Australia"],
-      "serviceType": ["Contract Staffing", "Executive Search", "RPO", "Manpower Recruitment"]
-    }
-    </script>
-
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
-        .bg-mesh {
-            background-image: radial-gradient(at 0% 0%, hsla(220,100%,95%,1) 0, transparent 50%), 
-                              radial-gradient(at 50% 0%, hsla(210,100%,98%,1) 0, transparent 50%), 
-                              radial-gradient(at 100% 0%, hsla(200,100%,95%,1) 0, transparent 50%);
+        :root {
+            --bg-deep: #020617;
+            --accent-cyan: #64FFDA;
+            --primary-navy: #0A192F;
+            --text-slate: #94a3b8;
         }
+
+        body { 
+          font-family: 'Plus Jakarta Sans', sans-serif; 
+          scroll-behavior: smooth; 
+          background-color: var(--bg-deep);
+          color: #f1f5f9;
+          overflow-x: hidden;
+        }
+
+        /* Fluid Typography for Enterprise Feel */
+        h1 { font-weight: 800; letter-spacing: -0.05em; line-height: 0.95; }
+        h2 { font-weight: 700; letter-spacing: -0.02em; }
         
-        /* Consistent Button Design System */
-        .btn-base {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            font-size: 11px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            user-select: none;
+        /* New Dynamic Background Layers */
+        .bg-canvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -2;
+          background: var(--bg-deep);
+          overflow: hidden;
         }
-        .btn-base:active { transform: scale(0.95); }
-        
-        .btn-primary {
-            @extend .btn-base;
-            background-color: #2563eb;
-            color: white;
-            padding: 1rem 2.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
-        }
-        .btn-primary:hover { background-color: #1d4ed8; box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.3); }
 
-        .btn-dark {
-            @extend .btn-base;
-            background-color: #0f172a;
-            color: white;
-            padding: 1rem 2.5rem;
-            border-radius: 1rem;
+        /* Animated Gradient Orbs */
+        .orb {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(100px);
+          opacity: 0.15;
+          pointer-events: none;
+          transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .btn-dark:hover { background-color: #1e293b; }
 
-        .btn-secondary {
-            @extend .btn-base;
-            background-color: #f1f5f9;
-            color: #0f172a;
-            padding: 1rem 2.5rem;
-            border-radius: 1rem;
+        .orb-1 {
+          width: 600px;
+          height: 600px;
+          background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%);
+          top: -10%;
+          left: -10%;
+          animation: float 20s infinite alternate;
         }
-        .btn-secondary:hover { background-color: #e2e8f0; }
 
-        .btn-outline {
-            @extend .btn-base;
-            background-color: transparent;
-            color: #0f172a;
-            border: 2px solid #e2e8f0;
-            padding: 0.75rem 2rem;
-            border-radius: 0.75rem;
+        .orb-2 {
+          width: 800px;
+          height: 800px;
+          background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+          bottom: -20%;
+          right: -10%;
+          animation: float 25s infinite alternate-reverse;
         }
-        .btn-outline:hover { border-color: #2563eb; color: #2563eb; background-color: #eff6ff; }
 
-        .animate-bounce-slow {
-          animation: bounce 3s infinite;
+        .orb-3 {
+          width: 500px;
+          height: 500px;
+          background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+          top: 40%;
+          right: 20%;
+          animation: float 18s infinite alternate;
         }
-        @keyframes bounce {
-          0%, 100% { transform: translateY(-5%); animation-timing-function: cubic-bezier(0.8,0,1,1); }
-          50% { transform: none; animation-timing-function: cubic-bezier(0,0,0.2,1); }
+
+        @keyframes float {
+          0% { transform: translate(0, 0) scale(1); }
+          100% { transform: translate(50px, 100px) scale(1.1); }
         }
+
+        /* Techy Dot Grid Pattern */
+        .dot-grid {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+          background-image: radial-gradient(rgba(100, 255, 218, 0.05) 1px, transparent 1px);
+          background-size: 40px 40px;
+          pointer-events: none;
+          mask-image: linear-gradient(to bottom, black, transparent, black);
+        }
+
+        /* Mouse Follower Glow Effect */
+        #mouseGlow {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 800px;
+          height: 800px;
+          background: radial-gradient(circle, rgba(100, 255, 218, 0.06) 0%, transparent 70%);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 0;
+          transform: translate(-50%, -50%);
+          transition: transform 0.1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* Quantum Glassmorphism Cards */
+        .glass-card {
+          backdrop-filter: blur(20px);
+          background: rgba(10, 25, 47, 0.3);
+          border: 1px solid rgba(100, 255, 218, 0.08);
+          box-shadow: 0 10px 40px -10px rgba(2, 6, 23, 0.8);
+          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+          border-color: rgba(100, 255, 218, 0.3);
+          transform: translateY(-8px);
+          background: rgba(10, 25, 47, 0.5);
+          box-shadow: 0 30px 60px -15px rgba(100, 255, 218, 0.12);
+        }
+
+        /* 3D Globe Animation */
+        .globe-container {
+            width: 500px;
+            height: 500px;
+            position: relative;
+            perspective: 1500px;
+        }
+        .globe {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #1e293b 0%, #020617 100%);
+            box-shadow: inset -20px -20px 80px rgba(0,0,0,0.9), 
+                        0 0 60px rgba(100, 255, 218, 0.15);
+            position: relative;
+            overflow: hidden;
+            animation: rotateGlobe 30s linear infinite;
+        }
+        .globe::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('https://www.transparenttextures.com/patterns/world-map.png');
+            opacity: 0.25;
+            background-size: cover;
+            animation: moveMap 30s linear infinite;
+        }
+
+        @keyframes rotateGlobe {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+        @keyframes moveMap {
+            from { background-position: 0 0; }
+            to { background-position: 1000px 0; }
+        }
+
+        .text-cyan { color: var(--accent-cyan); }
+        .bg-cyan { background-color: var(--accent-cyan); }
+        .border-cyan { border-color: var(--accent-cyan); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
     </style>
     <script type="importmap">
-    {
-      "imports": {
-        "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
-        "react/": "https://esm.sh/react@^19.2.3/",
-        "react": "https://esm.sh/react@^19.2.3",
-        "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
-      }
-    }
-    </script>
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
+    "react": "https://esm.sh/react@19",
+    "react-dom": "https://esm.sh/react-dom@19",
+    "react-dom/client": "https://esm.sh/react-dom@19/client",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+  }
+}
+</script>
 </head>
-<body class="bg-white text-slate-900 selection:bg-blue-600 selection:text-white">
+<body>
     <div id="root"></div>
+    
+    <!-- Background Elements -->
+    <div class="bg-canvas" id="bgCanvas">
+      <div class="orb orb-1" id="orb1"></div>
+      <div class="orb orb-2" id="orb2"></div>
+      <div class="orb orb-3" id="orb3"></div>
+    </div>
+    <div class="dot-grid" id="dotGrid"></div>
+    <div id="mouseGlow"></div>
+    
+    <script>
+      const glow = document.getElementById('mouseGlow');
+      const orb1 = document.getElementById('orb1');
+      const orb2 = document.getElementById('orb2');
+      const orb3 = document.getElementById('orb3');
+      const dotGrid = document.getElementById('dotGrid');
+
+      document.addEventListener('mousemove', (e) => {
+        glow.style.left = e.clientX + 'px';
+        glow.style.top = e.clientY + 'px';
+      });
+
+      // Simple Parallax on Scroll
+      window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY;
+        
+        // Move orbs slightly on scroll for parallax depth
+        orb1.style.transform = `translateY(${scrolled * 0.2}px)`;
+        orb2.style.transform = `translateY(${scrolled * -0.1}px)`;
+        orb3.style.transform = `translateY(${scrolled * 0.15}px)`;
+        
+        // Move dot grid slightly
+        dotGrid.style.transform = `translateY(${scrolled * 0.05}px)`;
+      });
+    </script>
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>
