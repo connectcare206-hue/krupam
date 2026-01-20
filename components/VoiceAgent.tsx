@@ -1,52 +1,75 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { GoogleGenAI, Modality, LiveServerMessage, Blob } from '@google/genai';
 import { encode, decode, decodeAudioData } from '../utils/audioUtils';
 
 const SYSTEM_INSTRUCTION = `
-Act as an Elite Australian Recruitment Consultant for Connectcare Services. 
-Your tone is professional, confident, friendly, and you have a clear Australian accent.
+You are a warm, empathetic, and highly professional human consultant at Connectcare Services. 
+YOUR PERSONALITY:
+- Talk like a real person, not an AI. Use a natural, warm, conversational flow.
+- Use natural fillers like "hmm," "that's interesting," or "well" to sound human.
+- Be genuinely excited about helping the user build their brand.
+- Keep responses concise and engaging.
 
-KEY INFO:
-- We provide contractual staffing for Pharma, IT, AI, Solar, Real Estate, and Support.
-- Markets: USA, UK, Canada, and Australia.
-- Cost Advantage: We charge $4–5/hour. Clients save 40-70%.
-- Model: We are a recruitment partner, NOT an outsourcing firm. The client has 100% control over selection.
+YOUR KNOWLEDGE BASE (THE BRAND):
+We source elite talent from India for firms in the USA, UK, Canada, and Australia. 
+We save companies around 50% in costs ($15/hr local market vs $7.5/hr with us).
+We are ISO 9001:2015 certified.
 
-GOALS:
-- Explain cost benefits.
-- Answer queries about hiring process.
-- Guide users to schedule an interview.
+SPECIFIC RESPONSES:
+- If asked about "services": We offer IT/AI Engineering, Bookkeeping, 24/7 CX Support, Sales/Growth Hubs, Pharma Sourcing, and Managed RPO.
+- If asked about "contact/support": Mention our email connectcare206@gmail.com and WhatsApp +91 8460335032.
+- If asked "Who are you": Explain we are a global staffing portal that builds company brands through high-efficiency human resources.
 
-Respond with typical Aussie flair (G'day, cheers, no worries) but keep it high-level corporate.
+GREETING:
+Start with: "Hi there! Welcome to Connectcare Services. I'm so glad you're here. We're all about helping you turn your company into a global brand with some truly elite talent. How can I help you scale things up today?"
 `;
+
+interface Message {
+  role: 'user' | 'assistant';
+  text: string;
+  isFinal: boolean;
+}
 
 export const VoiceAgent: React.FC = () => {
   const [isActive, setIsActive] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [showTooltip, setShowTooltip] = useState(true);
   
   const audioContextInRef = useRef<AudioContext | null>(null);
   const audioContextOutRef = useRef<AudioContext | null>(null);
   const nextStartTimeRef = useRef<number>(0);
   const sourcesRef = useRef<Set<AudioBufferSourceNode>>(new Set());
   const sessionRef = useRef<any>(null);
-  const scriptProcessorRef = useRef<ScriptProcessorNode | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const currentInputText = useRef('');
+  const currentOutputText = useRef('');
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowTooltip(false), 8000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const stopSession = () => {
     if (sessionRef.current) {
       try { sessionRef.current.close(); } catch(e) {}
       sessionRef.current = null;
     }
-    if (scriptProcessorRef.current) {
-      scriptProcessorRef.current.disconnect();
-      scriptProcessorRef.current = null;
-    }
-    sourcesRef.current.forEach(source => {
-      try { source.stop(); } catch (e) {}
+    
+    sourcesRef.current.forEach(s => {
+      try { s.stop(); } catch(e) {}
     });
     sourcesRef.current.clear();
-    
+
     if (audioContextInRef.current) {
       audioContextInRef.current.close().catch(() => {});
       audioContextInRef.current = null;
@@ -59,24 +82,22 @@ export const VoiceAgent: React.FC = () => {
     setIsActive(false);
     setIsConnecting(false);
     setIsSpeaking(false);
+    setMessages([]);
+    currentInputText.current = '';
+    currentOutputText.current = '';
   };
 
   const startSession = async () => {
     if (isConnecting || isActive) return;
     setIsConnecting(true);
+    setShowTooltip(false);
     
     try {
-      // 1. Check for API key early
-      if (!process.env.API_KEY) {
-        throw new Error("API Key is missing. Please set it in Netlify/Environment variables.");
-      }
+      if (!process.env.API_KEY) throw new Error("API Key missing");
 
-      // 2. ONLY NOW request microphone - this ensures the browser prompt only appears on click
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
-      // Initialize Contexts
       audioContextInRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
       audioContextOutRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
       
@@ -92,13 +113,12 @@ export const VoiceAgent: React.FC = () => {
             
             const source = audioContextInRef.current!.createMediaStreamSource(stream);
             const scriptProcessor = audioContextInRef.current!.createScriptProcessor(4096, 1, 1);
-            scriptProcessorRef.current = scriptProcessor;
 
             scriptProcessor.onaudioprocess = (e) => {
               const inputData = e.inputBuffer.getChannelData(0);
               const int16 = new Int16Array(inputData.length);
               for (let i = 0; i < inputData.length; i++) {
-                int16[i] = inputData[i] * 32768;
+                int16[i] = Math.max(-1, Math.min(1, inputData[i])) * 32767;
               }
               const pcmBlob: Blob = {
                 data: encode(new Uint8Array(int16.buffer)),
@@ -106,9 +126,7 @@ export const VoiceAgent: React.FC = () => {
               };
               
               sessionPromise.then(session => {
-                if (session && typeof session.sendRealtimeInput === 'function') {
-                  session.sendRealtimeInput({ media: pcmBlob });
-                }
+                if (session) session.sendRealtimeInput({ media: pcmBlob });
               });
             };
 
@@ -116,11 +134,26 @@ export const VoiceAgent: React.FC = () => {
             scriptProcessor.connect(audioContextInRef.current!.destination);
           },
           onmessage: async (message: LiveServerMessage) => {
+            if (message.serverContent?.inputTranscription) {
+              const text = message.serverContent.inputTranscription.text;
+              currentInputText.current += text;
+              updateMessages('user', currentInputText.current, false);
+            }
+
+            if (message.serverContent?.outputTranscription) {
+              const text = message.serverContent.outputTranscription.text;
+              currentOutputText.current += text;
+              updateMessages('assistant', currentOutputText.current, false);
+            }
+
+            if (message.serverContent?.turnComplete) {
+              finalizeMessages();
+            }
+
             const base64Audio = message.serverContent?.modelTurn?.parts?.[0]?.inlineData?.data;
             if (base64Audio) {
               setIsSpeaking(true);
               const ctx = audioContextOutRef.current!;
-              
               nextStartTimeRef.current = Math.max(nextStartTimeRef.current, ctx.currentTime);
               
               const audioBuffer = await decodeAudioData(decode(base64Audio), ctx, 24000, 1);
@@ -139,96 +172,126 @@ export const VoiceAgent: React.FC = () => {
             }
 
             if (message.serverContent?.interrupted) {
-              sourcesRef.current.forEach(s => { try { s.stop(); } catch(e) {} });
+              sourcesRef.current.forEach(s => {
+                try { s.stop(); } catch(e) {}
+              });
               sourcesRef.current.clear();
               nextStartTimeRef.current = 0;
               setIsSpeaking(false);
             }
           },
           onerror: (e) => {
-            console.error('Live API Error:', e);
+            console.error('Voice Session Error:', e);
             stopSession();
           },
-          onclose: () => {
-            stopSession();
-          }
+          onclose: () => stopSession()
         },
         config: {
           responseModalities: [Modality.AUDIO],
+          inputAudioTranscription: {},
+          outputAudioTranscription: {},
           speechConfig: {
-            voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Puck' } },
+            voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } },
           },
           systemInstruction: SYSTEM_INSTRUCTION,
         },
       });
 
       sessionRef.current = await sessionPromise;
-    } catch (err: any) {
-      console.error('Failed to start session:', err);
-      alert(err.message || "Could not start voice agent. Please ensure microphone access is allowed.");
+    } catch (err) {
+      console.error('Voice Setup Failed:', err);
       setIsConnecting(false);
     }
   };
 
+  const updateMessages = (role: 'user' | 'assistant', text: string, isFinal: boolean) => {
+    setMessages(prev => {
+      const filtered = prev.filter(m => m.isFinal);
+      return [...filtered, { role, text, isFinal }];
+    });
+  };
+
+  const finalizeMessages = () => {
+    setMessages(prev => {
+      const finalOnes = prev.filter(m => m.isFinal);
+      const newFinals: Message[] = [];
+      if (currentInputText.current) newFinals.push({ role: 'user', text: currentInputText.current, isFinal: true });
+      if (currentOutputText.current) newFinals.push({ role: 'assistant', text: currentOutputText.current, isFinal: true });
+      
+      currentInputText.current = '';
+      currentOutputText.current = '';
+      return [...finalOnes, ...newFinals];
+    });
+  };
+
   return (
-    <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end gap-4">
+    <div className="fixed bottom-8 right-8 z-[100] flex flex-col items-end gap-5">
       {isActive && (
-        <div className="bg-slate-900 border border-white/10 p-6 rounded-[2.5rem] shadow-2xl w-80 mb-2 animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-hidden relative">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-cyan-400"></div>
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
-              <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">AU Recruiter Active</span>
+        <div className="bg-[#020617]/95 backdrop-blur-3xl border border-white/10 p-8 rounded-[3rem] shadow-3xl w-80 md:w-96 mb-2 animate-in slide-in-from-bottom-4 duration-500 overflow-hidden relative">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 via-[#64FFDA] to-blue-600"></div>
+          
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <span className={`flex h-2 w-2 rounded-full ${isSpeaking ? 'bg-blue-500 animate-pulse' : 'bg-[#64FFDA] animate-pulse'}`}></span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Consultant Online</span>
             </div>
-            <button onClick={stopSession} className="text-slate-500 hover:text-white transition-colors p-1">
-              <i className="fas fa-times"></i>
-            </button>
+            <button onClick={stopSession} className="text-white opacity-30 hover:opacity-100 transition-all" aria-label="Close Assistant"><i className="fas fa-times"></i></button>
           </div>
-          <div className="flex flex-col items-center gap-6 text-center">
-            <div className={`w-20 h-20 rounded-full flex items-center justify-center transition-all duration-700 relative ${isSpeaking ? 'bg-blue-600/20 scale-105' : 'bg-slate-800'}`}>
-              {isSpeaking && (
-                <div className="absolute inset-0 rounded-full animate-ping bg-blue-600/20"></div>
-              )}
-              <div className="flex gap-1.5 items-end h-8">
-                {[1, 2, 3, 4, 5].map(i => (
-                  <div 
-                    key={i} 
-                    className={`w-1.5 bg-blue-500 rounded-full transition-all duration-300 ${isSpeaking ? 'animate-bounce h-full' : 'h-2 opacity-30'}`}
-                    style={{ animationDelay: `${i * 0.1}s` }}
-                  ></div>
-                ))}
-              </div>
+
+          <div className="flex flex-col gap-6">
+            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-700 ${isSpeaking ? 'bg-blue-500/10 border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.3)]' : 'bg-[#64FFDA]/10 border border-[#64FFDA]/30'}`}>
+              <i className={`fas ${isSpeaking ? 'fa-volume-high text-blue-500' : 'fa-microphone text-[#64FFDA]'} text-2xl`}></i>
             </div>
-            <div>
-              <p className="text-sm font-extrabold text-white mb-2">
-                {isSpeaking ? "G'day! I'm speaking..." : "I'm listening, mate..."}
-              </p>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-relaxed">
-                Ask about pricing, industries, <br />or hiring processes.
-              </p>
+            
+            <div 
+              ref={scrollRef}
+              className="h-48 overflow-y-auto custom-scrollbar flex flex-col gap-4 font-bold text-xs"
+            >
+              {messages.length === 0 ? (
+                <p className="text-slate-600 italic">"I'm here! Ask me about services or how we can save you 50% in costs."</p>
+              ) : (
+                messages.map((m, i) => (
+                  <div key={i} className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
+                    <span className="text-[9px] uppercase tracking-widest text-slate-500 mb-1">{m.role === 'user' ? 'You' : 'Connectcare'}</span>
+                    <div className={`max-w-[85%] p-3 rounded-2xl ${m.role === 'user' ? 'bg-white/5 text-slate-300' : 'bg-[#64FFDA]/10 text-[#64FFDA] shadow-sm'}`}>
+                      {m.text}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
       )}
 
-      <button
-        onClick={isActive ? stopSession : startSession}
-        disabled={isConnecting}
-        aria-label={isActive ? "End call" : "Start call with AU Recruiter"}
-        className={`w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all duration-500 active:scale-90 group relative ${isActive ? 'bg-red-500 hover:bg-red-600 rotate-[135deg]' : 'bg-blue-600 hover:bg-blue-700'}`}
-      >
-        {isConnecting ? (
-          <i className="fas fa-circle-notch fa-spin text-white text-xl"></i>
-        ) : (
-          <i className="fas fa-headset text-white text-2xl"></i>
+      <div className="flex flex-col gap-4 items-end relative">
+        {showTooltip && !isActive && (
+          <div className="absolute bottom-24 right-0 bg-[#64FFDA] text-[#020617] px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl animate-bounce whitespace-nowrap z-[-1]">
+            Hi! Speak with us <i className="fas fa-arrow-down ml-2" aria-hidden="true"></i>
+          </div>
         )}
-        
-        {!isActive && !isConnecting && (
-          <span className="absolute right-full mr-6 bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-5 py-3 rounded-2xl opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap pointer-events-none border border-white/10 shadow-2xl">
-            Talk to AU Recruiter
-          </span>
-        )}
-      </button>
+        <a 
+          href="https://wa.me/918460335032" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white shadow-xl hover:scale-110 active:scale-95 transition-all"
+          aria-label="Chat on WhatsApp"
+        >
+          <i className="fab fa-whatsapp text-3xl"></i>
+        </a>
+        <button
+          onClick={isActive ? stopSession : startSession}
+          disabled={isConnecting}
+          className={`w-20 h-20 rounded-[2.5rem] flex items-center justify-center shadow-2xl transition-all duration-500 active:scale-90 ${isActive ? 'bg-red-500' : 'bg-[#64FFDA] hover:bg-white'}`}
+          aria-label={isActive ? "Stop Voice Agent" : "Start Voice Agent"}
+        >
+          {isConnecting ? (
+            <i className="fas fa-circle-notch fa-spin text-[#020617] text-2xl"></i>
+          ) : (
+            <i className={`fas ${isActive ? 'fa-phone-slash' : 'fa-headset'} ${isActive ? 'text-white' : 'text-[#020617]'} text-2xl`}></i>
+          )}
+        </button>
+      </div>
     </div>
   );
 };

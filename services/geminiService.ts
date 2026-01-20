@@ -8,8 +8,8 @@ export async function getCostComparison(role: string, region: string) {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: `Provide a cost comparison for hiring a ${role} in ${region} vs hiring through Connectcare Services (India-based). 
-                 Highlight that local costs are typically $10-20/hour while Connectcare provides talent at $4-5/hour. 
-                 Format the output in a short, persuasive JSON structure with localAvg, nexusAvg, and savingsPercentage.`,
+                 Highlight that local costs are typically $15-30/hour while Connectcare provides talent at 60-70% less (around $4.5-5/hour). 
+                 Format the output in a short JSON structure with localAvg, nexusAvg, and savingsPercentage.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -18,13 +18,12 @@ export async function getCostComparison(role: string, region: string) {
             localAvg: { type: Type.STRING },
             nexusAvg: { type: Type.STRING },
             savingsPercentage: { type: Type.STRING },
-            analysis: { type: Type.STRING, description: 'A short 2-sentence summary of why this is better.' }
+            analysis: { type: Type.STRING, description: 'A short 2-sentence summary.' }
           },
           required: ['localAvg', 'nexusAvg', 'savingsPercentage', 'analysis']
         }
       }
     });
-
     return JSON.parse(response.text);
   } catch (error) {
     console.error("AI Error:", error);
@@ -36,43 +35,23 @@ export async function classifyInquiryIntent(message: string) {
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: `Classify the following recruitment inquiry message into one of three categories: 'Employer', 'Candidate', or 'General'.
+      contents: `Classify the following recruitment inquiry message into 'Employer', 'Candidate', or 'General'.
                  Message: "${message}"`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
           properties: {
-            intent: { 
-              type: Type.STRING, 
-              enum: ['Employer', 'Candidate', 'General'],
-              description: 'The classified intent of the user.'
-            },
-            confidence: { type: Type.NUMBER }
+            intent: { type: Type.STRING, enum: ['Employer', 'Candidate', 'General'] },
+            confidence: { type: Type.NUMBER },
+            reasoning: { type: Type.STRING }
           },
-          required: ['intent']
+          required: ['intent', 'confidence', 'reasoning']
         }
       }
     });
     return JSON.parse(response.text);
   } catch (error) {
-    return { intent: 'General' };
-  }
-}
-
-export async function generateJobPitch(role: string, industry: string) {
-  try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `Write a compelling recruitment pitch for a ${role} in the ${industry} sector. 
-                 Mention that the client gets full control over selection and we handle sourcing through Connectcare Services.`,
-      config: {
-        systemInstruction: "You are a professional recruitment head at Connectcare Services. Be concise and professional."
-      }
-    });
-    return response.text;
-  } catch (error) {
-    console.error("AI Error:", error);
-    return "Error generating pitch.";
+    return { intent: 'General', confidence: 0.5, reasoning: "Error fallback." };
   }
 }

@@ -2,10 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connectcare Services | Quantum Recruitment & Global Staffing</title>
-    <meta name="description" content="Premium offshore recruitment and contract staffing hub for USA, UK, Canada & AU firms. Hire elite talent at 70% lower costs.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Connectcare Services | Premium Global Recruitment & Offshore Staffing</title>
+    <meta name="description" content="Connectcare Services is a premier global recruitment hub. We help you build your company into a global brand by deploying elite Indian talent at 70% lower costs. ISO 9001:2015 Certified.">
+    <meta name="keywords" content="recruitment, offshore staffing, global talent, India hiring, IT staffing, bookkeeping, CX support, business branding">
+    <meta name="author" content="Connectcare Services">
     
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://connectcare-services.netlify.app/">
+    <meta property="og:title" content="Connectcare Services | Building Your Global Brand">
+    <meta property="og:description" content="Deploy elite Indian talent at 70% lower costs. Transform your business into a global powerhouse.">
+    <meta property="og:image" content="https://connectcare-services.netlify.app/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://connectcare-services.netlify.app/">
+    <meta property="twitter:title" content="Connectcare Services | Building Your Global Brand">
+    <meta property="twitter:description" content="Deploy elite Indian talent at 70% lower costs. Transform your business into a global powerhouse.">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,79 +41,45 @@
           overflow-x: hidden;
         }
 
-        /* Fluid Typography for Enterprise Feel */
         h1 { font-weight: 800; letter-spacing: -0.05em; line-height: 0.95; }
-        h2 { font-weight: 700; letter-spacing: -0.02em; }
         
-        /* New Dynamic Background Layers */
         .bg-canvas {
           position: fixed;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
-          z-index: -2;
+          z-index: -20;
           background: var(--bg-deep);
           overflow: hidden;
+          pointer-events: none;
         }
 
-        /* Animated Gradient Orbs */
         .orb {
           position: absolute;
           border-radius: 50%;
-          filter: blur(100px);
-          opacity: 0.15;
+          filter: blur(120px);
+          opacity: 0.12;
           pointer-events: none;
-          transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+          will-change: transform;
         }
 
-        .orb-1 {
-          width: 600px;
-          height: 600px;
-          background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%);
-          top: -10%;
-          left: -10%;
-          animation: float 20s infinite alternate;
-        }
+        .orb-1 { width: 800px; height: 800px; background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%); top: -10%; left: -5%; }
+        .orb-2 { width: 1000px; height: 1000px; background: radial-gradient(circle, #3b82f6) 0%, transparent 70%); bottom: -20%; right: -5%; }
 
-        .orb-2 {
-          width: 800px;
-          height: 800px;
-          background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
-          bottom: -20%;
-          right: -10%;
-          animation: float 25s infinite alternate-reverse;
-        }
-
-        .orb-3 {
-          width: 500px;
-          height: 500px;
-          background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
-          top: 40%;
-          right: 20%;
-          animation: float 18s infinite alternate;
-        }
-
-        @keyframes float {
-          0% { transform: translate(0, 0) scale(1); }
-          100% { transform: translate(50px, 100px) scale(1.1); }
-        }
-
-        /* Techy Dot Grid Pattern */
         .dot-grid {
           position: fixed;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
-          z-index: -1;
-          background-image: radial-gradient(rgba(100, 255, 218, 0.05) 1px, transparent 1px);
-          background-size: 40px 40px;
+          z-index: -15;
+          background-image: radial-gradient(rgba(100, 255, 218, 0.04) 1px, transparent 1px);
+          background-size: 50px 50px;
           pointer-events: none;
           mask-image: linear-gradient(to bottom, black, transparent, black);
         }
 
-        /* Mouse Follower Glow Effect */
         #mouseGlow {
           position: fixed;
           top: 0;
@@ -108,124 +89,84 @@
           background: radial-gradient(circle, rgba(100, 255, 218, 0.06) 0%, transparent 70%);
           border-radius: 50%;
           pointer-events: none;
-          z-index: 0;
+          z-index: -10;
           transform: translate(-50%, -50%);
           transition: transform 0.1s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* Quantum Glassmorphism Cards */
         .glass-card {
-          backdrop-filter: blur(20px);
-          background: rgba(10, 25, 47, 0.3);
+          backdrop-filter: blur(25px);
+          background: rgba(10, 25, 47, 0.25);
           border: 1px solid rgba(100, 255, 218, 0.08);
-          box-shadow: 0 10px 40px -10px rgba(2, 6, 23, 0.8);
           transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .glass-card:hover {
-          border-color: rgba(100, 255, 218, 0.3);
-          transform: translateY(-8px);
-          background: rgba(10, 25, 47, 0.5);
-          box-shadow: 0 30px 60px -15px rgba(100, 255, 218, 0.12);
-        }
 
-        /* 3D Globe Animation */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(100, 255, 218, 0.2); border-radius: 10px; }
+
         .globe-container {
-            width: 500px;
-            height: 500px;
+            width: 450px;
+            height: 450px;
             position: relative;
-            perspective: 1500px;
+            perspective: 2000px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .globe {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #1e293b 0%, #020617 100%);
-            box-shadow: inset -20px -20px 80px rgba(0,0,0,0.9), 
-                        0 0 60px rgba(100, 255, 218, 0.15);
+            background: rgba(10, 25, 47, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 255, 218, 0.1);
             position: relative;
-            overflow: hidden;
-            animation: rotateGlobe 30s linear infinite;
-        }
-        .globe::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('https://www.transparenttextures.com/patterns/world-map.png');
-            opacity: 0.25;
-            background-size: cover;
-            animation: moveMap 30s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+            animation: rotateMedallion 25s linear infinite;
         }
 
-        @keyframes rotateGlobe {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(360deg); }
-        }
-        @keyframes moveMap {
-            from { background-position: 0 0; }
-            to { background-position: 1000px 0; }
+        @keyframes rotateMedallion {
+            0% { transform: rotateY(0deg) rotateX(10deg); }
+            100% { transform: rotateY(360deg) rotateX(10deg); }
         }
 
-        .text-cyan { color: var(--accent-cyan); }
-        .bg-cyan { background-color: var(--accent-cyan); }
-        .border-cyan { border-color: var(--accent-cyan); }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-deep); }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+        @media (max-width: 768px) {
+          .globe-container { width: 280px; height: 280px; }
+          h1 { font-size: 3.5rem !important; }
+        }
     </style>
-    <script type="importmap">
+<script type="importmap">
 {
   "imports": {
-    "@google/genai": "https://esm.sh/@google/genai@^1.35.0",
-    "react": "https://esm.sh/react@19",
-    "react-dom": "https://esm.sh/react-dom@19",
-    "react-dom/client": "https://esm.sh/react-dom@19/client",
+    "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/",
     "vite": "https://esm.sh/vite@^7.3.1",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "@google/genai": "https://esm.sh/@google/genai@^1.37.0"
   }
 }
 </script>
 </head>
 <body>
     <div id="root"></div>
-    
-    <!-- Background Elements -->
-    <div class="bg-canvas" id="bgCanvas">
-      <div class="orb orb-1" id="orb1"></div>
-      <div class="orb orb-2" id="orb2"></div>
-      <div class="orb orb-3" id="orb3"></div>
+    <div class="bg-canvas" aria-hidden="true">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
     </div>
-    <div class="dot-grid" id="dotGrid"></div>
-    <div id="mouseGlow"></div>
-    
+    <div class="dot-grid" aria-hidden="true"></div>
+    <div id="mouseGlow" aria-hidden="true"></div>
     <script>
       const glow = document.getElementById('mouseGlow');
-      const orb1 = document.getElementById('orb1');
-      const orb2 = document.getElementById('orb2');
-      const orb3 = document.getElementById('orb3');
-      const dotGrid = document.getElementById('dotGrid');
-
       document.addEventListener('mousemove', (e) => {
         glow.style.left = e.clientX + 'px';
         glow.style.top = e.clientY + 'px';
       });
-
-      // Simple Parallax on Scroll
-      window.addEventListener('scroll', () => {
-        const scrolled = window.scrollY;
-        
-        // Move orbs slightly on scroll for parallax depth
-        orb1.style.transform = `translateY(${scrolled * 0.2}px)`;
-        orb2.style.transform = `translateY(${scrolled * -0.1}px)`;
-        orb3.style.transform = `translateY(${scrolled * 0.15}px)`;
-        
-        // Move dot grid slightly
-        dotGrid.style.transform = `translateY(${scrolled * 0.05}px)`;
-      });
     </script>
-    <script type="module" src="./index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>

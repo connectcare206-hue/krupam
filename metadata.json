@@ -1,10 +1,12 @@
 {
   "name": "Connectcare Services",
   "short_name": "Connectcare",
-  "description": "Global recruitment portal for offshore staffing. Hire professionals from India at 70% lower costs.",
+  "description": "Premium global recruitment hub for offshore staffing. Building company brands through elite Indian talent.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#2563eb",
-  "requestFramePermissions": []
+  "background_color": "#020617",
+  "theme_color": "#64FFDA",
+  "requestFramePermissions": [
+    "microphone"
+  ]
 }

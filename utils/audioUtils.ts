@@ -1,4 +1,3 @@
-
 export function encode(bytes: Uint8Array): string {
   let binary = '';
   const len = bytes.byteLength;
@@ -24,7 +23,7 @@ export async function decodeAudioData(
   sampleRate: number,
   numChannels: number,
 ): Promise<AudioBuffer> {
-  // Use byteOffset and byteLength to ensure we are looking at the correct part of the buffer
+  // Raw PCM to Float32 normalization
   const dataInt16 = new Int16Array(data.buffer, data.byteOffset, data.byteLength / 2);
   const frameCount = dataInt16.length / numChannels;
   const buffer = ctx.createBuffer(numChannels, frameCount, sampleRate);
